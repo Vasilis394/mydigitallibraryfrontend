@@ -92,20 +92,20 @@ function LiteratureDetail({ user }) {
       <div style={styles.header}>
         <h1>{literature.title}</h1>
         <div style={styles.actions}>
-          {!isEditing && (
-            <>
-              <button onClick={() => setIsEditing(true)} style={styles.editBtn}>
-                Edit
-              </button>
-              <button onClick={handleDelete} style={styles.deleteBtn}>
-                Delete
-              </button>
-            </>
-          )}
-          <button onClick={() => navigate("/literature")} style={styles.backBtn}>
-            Back to List
-          </button>
-        </div>
+  {user && literature.user === user.id && !isEditing && (
+    <>
+      <button onClick={() => setIsEditing(true)} style={styles.editBtn}>
+        Edit
+      </button>
+      <button onClick={handleDelete} style={styles.deleteBtn}>
+        Delete
+      </button>
+    </>
+  )}
+  <button onClick={() => navigate("/literature")} style={styles.backBtn}>
+    Back to List
+  </button>
+</div>
       </div>
 
       {isEditing ? (

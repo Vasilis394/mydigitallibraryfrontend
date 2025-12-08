@@ -94,18 +94,25 @@ function LiteratureList({ user }) {
                 <strong>Authors:</strong> {item.authors}
               </p>
               <div style={styles.cardFooter}>
-                <div style={styles.actions}>
-                  <Link to={`/literature/${item.id}`} style={styles.viewButton}>
-                    View
-                  </Link>
-                  <button
-                    onClick={() => handleDelete(item.id)}
-                    style={styles.deleteButton}
-                  >
-                    Delete
-                  </button>
-                </div>
-              </div>
+  <div style={styles.actions}>
+    <Link to={`/literature/${item.id}`} style={styles.viewButton}>
+      View
+    </Link>
+    
+    {/* Only show edit/delete if user owns the literature */}
+    {user && item.user === user.id && (
+      <>
+        
+        <button
+          onClick={() => handleDelete(item.id)}
+          style={styles.deleteButton}
+        >
+          Delete
+        </button>
+      </>
+    )}
+  </div>
+</div>
             </div>
           ))}
         </div>

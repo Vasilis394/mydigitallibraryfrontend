@@ -9,6 +9,8 @@ import SignUp from "./pages/SignUp";
 import LiteratureList from "./pages/LiteratureList";
 import LiteratureDetail from "./pages/LiteratureDetail";
 import CreateLiterature from "./pages/CreateLiterature";
+import LibrariesList from "./pages/LibrariesList";
+import LibraryDetail from "./pages/LibraryDetail";
 import Home from "./pages/Home";
 
 function App() {
@@ -48,30 +50,35 @@ function App() {
             <Route path="/" element={<Home user={user} />} />
             <Route path="/login" element={<Login setUser={setUser} />} />
             <Route path="/signup" element={<SignUp setUser={setUser} />} />
-            <Route
-              path="/literature"
-              element={
-                <PrivateRoute user={user}>
-                  <LiteratureList user={user} />
-                </PrivateRoute>
-              }
-            />
-            <Route
-              path="/literature/:id"
-              element={
-                <PrivateRoute user={user}>
-                  <LiteratureDetail user={user} />
-                </PrivateRoute>
-              }
-            />
-            <Route
-              path="/create-literature"
+            <Route path="/literature" element={<LiteratureList user={user} />} />
+            <Route path="/literature/:id" element={<LiteratureDetail user={user} />} />
+            
+            {/* Protected Routes */}
+            <Route 
+              path="/create-literature" 
               element={
                 <PrivateRoute user={user}>
                   <CreateLiterature user={user} />
                 </PrivateRoute>
-              }
+              } 
             />
+            <Route 
+              path="/libraries" 
+              element={
+                <PrivateRoute user={user}>
+                  <LibrariesList user={user} />
+                </PrivateRoute>
+              } 
+            />
+            <Route 
+              path="/libraries/:id" 
+              element={
+                <PrivateRoute user={user}>
+                  <LibraryDetail user={user} />
+                </PrivateRoute>
+              } 
+            />
+            
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         </div>
