@@ -1,4 +1,4 @@
-// src/components/Navigation.jsx
+
 import { Link, useNavigate } from "react-router-dom";
 import { signOut } from "../services/users";
 import LibraryDropdown from "./LibraryDropdown";
@@ -131,7 +131,7 @@ const styles = {
   },
 };
 
-// Add hover styles
+
 const addNavHoverStyles = () => {
   const style = document.createElement('style');
   style.textContent = `

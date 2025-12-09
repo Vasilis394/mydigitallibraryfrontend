@@ -1,4 +1,4 @@
-// src/pages/LibrariesList.jsx
+
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { getAllLibraries, deleteLibrary } from "../services/literatures";
@@ -17,10 +17,11 @@ function LibrariesList({ user }) {
   const fetchLibraries = async () => {
     try {
       const data = await getAllLibraries();
+      console.log("Fetched libraries:", data); //debug
       setLibraries(data);
     } catch (error) {
+      console.error("Failed to fetch libraries:", error);
       setError("Failed to fetch libraries");
-      console.error(error);
     } finally {
       setLoading(false);
     }
@@ -73,7 +74,7 @@ function LibrariesList({ user }) {
         <h1>My Libraries</h1>
         <div style={styles.actions}>
           <Link to="/literature" style={styles.backButton}>
-            View Literature
+            Browse Literature
           </Link>
         </div>
       </div>
@@ -82,6 +83,7 @@ function LibrariesList({ user }) {
         {libraries.length === 0 ? (
           <div style={styles.empty}>
             <p>No libraries yet. Create your first library!</p>
+            <p style={styles.emptySubtitle}>You can create libraries from the dropdown menu in the navigation bar.</p>
             <Link to="/literature" style={styles.createLink}>
               Browse Literature to Add to Libraries
             </Link>
@@ -92,38 +94,22 @@ function LibrariesList({ user }) {
               <div style={styles.cardHeader}>
                 <h3 style={styles.title}>{library.name}</h3>
                 <span style={styles.count}>
-                  {library.literature_count || 0} items
+                  {library.literature_count || 0} item{library.literature_count !== 1 ? 's' : ''}
                 </span>
               </div>
               
-              <div style={styles.cardBody}>
-                {library.description && (
+              {library.description && (
+                <div style={styles.cardBody}>
                   <p style={styles.description}>{library.description}</p>
-                )}
-                
-                <div style={styles.literaturePreview}>
-                  {library.literature && library.literature.length > 0 ? (
-                    library.literature.slice(0, 3).map((item, index) => (
-                      <div key={index} style={styles.previewItem}>
-                        <Link to={`/literature/${item.id}`} style={styles.previewLink}>
-                          {item.title}
-                        </Link>
-                      </div>
-                    ))
-                  ) : (
-                    <p style={styles.emptyLibrary}>No literature added yet</p>
-                  )}
                 </div>
-              </div>
+              )}
               
               <div style={styles.cardFooter}>
                 <div style={styles.actions}>
                   <Link to={`/libraries/${library.id}`} style={styles.viewButton}>
-                    View Library
+                    View Details
                   </Link>
-                  <Link to={`/libraries/${library.id}/edit`} style={styles.editButton}>
-                    Edit
-                  </Link>
+                  
                   <button
                     onClick={() => handleDelete(library.id, library.name)}
                     style={styles.deleteButton}
@@ -229,33 +215,12 @@ const styles = {
     marginLeft: "0.5rem",
   },
   cardBody: {
-    flex: "1",
     marginBottom: "1rem",
   },
   description: {
     color: "#6c757d",
-    marginBottom: "1rem",
     lineHeight: "1.5",
-  },
-  literaturePreview: {
-    backgroundColor: "#f8f9fa",
-    borderRadius: "4px",
-    padding: "1rem",
-  },
-  previewItem: {
-    marginBottom: "0.5rem",
-    paddingBottom: "0.5rem",
-    borderBottom: "1px solid #e9ecef",
-  },
-  previewLink: {
-    color: "#007bff",
-    textDecoration: "none",
-    fontSize: "0.875rem",
-  },
-  emptyLibrary: {
-    color: "#6c757d",
-    fontSize: "0.875rem",
-    textAlign: "center",
+    fontSize: "0.95rem",
   },
   cardFooter: {
     marginTop: "auto",
@@ -273,6 +238,7 @@ const styles = {
     borderRadius: "4px",
     textAlign: "center",
     fontSize: "0.875rem",
+    transition: "background-color 0.2s",
   },
   editButton: {
     flex: "1",
@@ -283,6 +249,7 @@ const styles = {
     borderRadius: "4px",
     textAlign: "center",
     fontSize: "0.875rem",
+    transition: "background-color 0.2s",
   },
   deleteButton: {
     flex: "1",
@@ -293,20 +260,25 @@ const styles = {
     borderRadius: "4px",
     fontSize: "0.875rem",
     cursor: "pointer",
+    transition: "background-color 0.2s",
   },
   empty: {
     gridColumn: "1 / -1",
     textAlign: "center",
-    padding: "3rem",
+    padding: "4rem",
     backgroundColor: "#f8f9fa",
     borderRadius: "8px",
+  },
+  emptySubtitle: {
+    color: "#6c757d",
+    margin: "0.5rem 0 1.5rem 0",
   },
   createLink: {
     color: "#007bff",
     textDecoration: "none",
     fontWeight: "500",
-    marginTop: "1rem",
-    display: "inline-block",
+    fontSize: "1.1rem",
+    transition: "text-decoration 0.2s",
   },
   loadingContainer: {
     display: "flex",
@@ -335,5 +307,23 @@ const styles = {
     maxWidth: "500px",
   },
 };
+
+
+const addHoverEffects = () => {
+  const style = document.createElement('style');
+  style.textContent = `
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    .view-button:hover { background-color: #0056b3; }
+    .edit-button:hover { background-color: #545b62; }
+    .delete-button:hover { background-color: #c82333; }
+    .create-link:hover { text-decoration: underline; }
+  `;
+  document.head.appendChild(style);
+};
+
+addHoverEffects();
 
 export default LibrariesList;

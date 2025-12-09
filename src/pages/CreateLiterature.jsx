@@ -1,4 +1,4 @@
-// src/pages/CreateLiterature.jsx
+
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { createLiterature } from "../services/literatures";
@@ -327,7 +327,7 @@ const styles = {
   },
 };
 
-// Disabled state styling
+
 Object.assign(styles.input, {
   ":disabled": {
     backgroundColor: "#e9ecef",

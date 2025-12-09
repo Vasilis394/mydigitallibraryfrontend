@@ -1,4 +1,4 @@
-// src/pages/LiteratureDetail.jsx
+
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { 
@@ -56,7 +56,7 @@ function LiteratureDetail({ user }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    // Ensure literature_type is a number
+    
     const dataToSend = {
       ...formData,
       literature_type: parseInt(formData.literature_type) || formData.literature_type
@@ -67,7 +67,7 @@ function LiteratureDetail({ user }) {
       console.log("Update successful:", response);
       setIsEditing(false);
       fetchLiterature();
-      alert("Literature updated successfully!");
+      
     } catch (error) {
       console.error("Update failed:", error);
       const errorMsg = error.response?.data?.message || error.message || "Failed to update literature";
@@ -98,7 +98,7 @@ function LiteratureDetail({ user }) {
 
     try {
       await addToLibrary(id, libraryId);
-      alert("Added to library successfully!");
+      
       fetchLiterature();
       setShowLibraryDropdown(false);
     } catch (error) {
@@ -117,7 +117,7 @@ function LiteratureDetail({ user }) {
 
     try {
       await removeFromLibrary(id, libraryId);
-      alert("Removed from library successfully!");
+      
       fetchLiterature();
     } catch (error) {
       console.error("Failed to remove from library:", error);
@@ -317,12 +317,12 @@ function LiteratureDetail({ user }) {
             </div>
           )}
           
-          {/* Library Management Section - Only for logged in users */}
+          
           {user && (
             <div style={styles.librarySection}>
               <h3 style={styles.sectionTitle}>Library Management</h3>
               
-              {/* Add to Library Button */}
+              
               <div style={styles.addToLibrary}>
                 <button 
                   onClick={() => setShowLibraryDropdown(!showLibraryDropdown)}
@@ -723,7 +723,7 @@ const styles = {
   },
 };
 
-// Add hover effects
+
 const addHoverEffects = () => {
   const style = document.createElement('style');
   style.textContent = `

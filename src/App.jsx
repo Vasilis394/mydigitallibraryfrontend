@@ -1,4 +1,4 @@
-// src/App.jsx
+
 import { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { verifyUser } from "./services/users";
@@ -53,7 +53,7 @@ function App() {
             <Route path="/literature" element={<LiteratureList user={user} />} />
             <Route path="/literature/:id" element={<LiteratureDetail user={user} />} />
             
-            {/* Protected Routes */}
+            
             <Route 
               path="/create-literature" 
               element={

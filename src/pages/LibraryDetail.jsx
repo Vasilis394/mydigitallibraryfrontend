@@ -1,4 +1,4 @@
-// src/pages/LibraryDetail.jsx
+
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { 
@@ -15,7 +15,7 @@ function LibraryDetail({ user }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [isEditing, setIsEditing] = useState(false);
-  const [formData, setFormData] = useState({});
+  const [libraryName, setLibraryName] = useState("");
 
   useEffect(() => {
     if (user) {
@@ -26,31 +26,36 @@ function LibraryDetail({ user }) {
   const fetchLibrary = async () => {
     try {
       const data = await getOneLibrary(id);
+      console.log("Fetched library data:", data);
       setLibrary(data);
-      setFormData(data);
+      setLibraryName(data.name);
     } catch (error) {
+      console.error("Failed to fetch library details:", error);
       setError("Failed to fetch library details");
-      console.error(error);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+  const handleNameChange = (e) => {
+    setLibraryName(e.target.value);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log("Submitting library name update:", libraryName);
+    
     try {
-      await updateLibrary(id, formData);
+      
+      await updateLibrary(id, { name: libraryName });
       setIsEditing(false);
-      fetchLibrary();
+      fetchLibrary(); // Refresh
+      
     } catch (error) {
-      setError("Failed to update library");
+      console.error("Update failed:", error);
+      console.error("Error response:", error.response?.data);
+      setError("Failed to update library name: " + (error.response?.data?.message || error.message));
+      alert("Failed to update library name. Please try again.");
     }
   };
 
@@ -60,7 +65,9 @@ function LibraryDetail({ user }) {
         await deleteLibrary(id);
         navigate("/libraries");
       } catch (error) {
+        console.error("Delete failed:", error);
         setError("Failed to delete library");
+        alert("Failed to delete library");
       }
     }
   };
@@ -69,8 +76,8 @@ function LibraryDetail({ user }) {
     if (window.confirm("Remove this literature from the library?")) {
       try {
         await removeFromLibrary(literatureId, id);
-        alert("Removed successfully!");
-        fetchLibrary(); // Refresh the library
+        
+        fetchLibrary(); 
       } catch (error) {
         console.error("Failed to remove:", error);
         alert("Failed to remove from library");
@@ -101,12 +108,18 @@ function LibraryDetail({ user }) {
   if (error) return (
     <div style={styles.errorContainer}>
       <div style={styles.error}>{error}</div>
+      <button onClick={() => navigate("/libraries")} style={styles.backButton}>
+        Back to Libraries
+      </button>
     </div>
   );
   
   if (!library) return (
     <div style={styles.errorContainer}>
       <div style={styles.error}>Library not found</div>
+      <button onClick={() => navigate("/libraries")} style={styles.backButton}>
+        Back to Libraries
+      </button>
     </div>
   );
 
@@ -114,14 +127,16 @@ function LibraryDetail({ user }) {
     <div style={styles.container}>
       <div style={styles.header}>
         {isEditing ? (
-          <input
-            type="text"
-            name="name"
-            value={formData.name || ""}
-            onChange={handleChange}
-            style={styles.titleInput}
-            required
-          />
+          <form onSubmit={handleSubmit} style={styles.editForm}>
+            <input
+              type="text"
+              value={libraryName}
+              onChange={handleNameChange}
+              style={styles.titleInput}
+              required
+              autoFocus
+            />
+          </form>
         ) : (
           <h1>{library.name}</h1>
         )}
@@ -129,7 +144,7 @@ function LibraryDetail({ user }) {
           {!isEditing ? (
             <>
               <button onClick={() => setIsEditing(true)} style={styles.editBtn}>
-                Edit
+                Edit Name
               </button>
               <button onClick={handleDelete} style={styles.deleteBtn}>
                 Delete
@@ -140,12 +155,12 @@ function LibraryDetail({ user }) {
             </>
           ) : (
             <>
-              <button type="submit" form="library-form" style={styles.saveBtn}>
+              <button onClick={handleSubmit} style={styles.saveBtn}>
                 Save
               </button>
               <button onClick={() => {
                 setIsEditing(false);
-                setFormData(library);
+                setLibraryName(library.name);
               }} style={styles.cancelBtn}>
                 Cancel
               </button>
@@ -154,79 +169,54 @@ function LibraryDetail({ user }) {
         </div>
       </div>
 
-      <form id="library-form" onSubmit={handleSubmit} style={styles.form}>
-        {isEditing && (
-          <div style={styles.formGroup}>
-            <label htmlFor="description" style={styles.label}>
-              Description
-            </label>
-            <textarea
-              id="description"
-              name="description"
-              value={formData.description || ""}
-              onChange={handleChange}
-              rows="3"
-              style={styles.textarea}
-              placeholder="Add a description for this library..."
-            />
-          </div>
-        )}
-
-        {!isEditing && library.description && (
-          <div style={styles.description}>
-            <p>{library.description}</p>
-          </div>
-        )}
-
-        <div style={styles.content}>
-          <h3 style={styles.contentTitle}>
-            Literature in this library ({library.literature ? library.literature.length : 0})
-          </h3>
-          
-          {library.literature && library.literature.length > 0 ? (
-            <div style={styles.literatureList}>
-              {library.literature.map((item) => (
-                <div key={item.id} style={styles.literatureItem}>
-                  <div style={styles.itemContent}>
-                    <h4 style={styles.itemTitle}>{item.title}</h4>
-                    <p style={styles.itemAuthors}>by {item.authors}</p>
-                    <p style={styles.itemDescription}>
-                      {item.description && item.description.length > 150
-                        ? `${item.description.substring(0, 150)}...`
-                        : item.description || "No description"}
-                    </p>
-                  </div>
-                  <div style={styles.itemActions}>
-                    <button 
-                      onClick={() => navigate(`/literature/${item.id}`)}
-                      style={styles.viewItemButton}
-                    >
-                      View
-                    </button>
-                    <button
-                      onClick={() => handleRemoveFromLibrary(item.id)}
-                      style={styles.removeItemButton}
-                      title="Remove from library"
-                    >
-                      Remove
-                    </button>
-                  </div>
+      <div style={styles.content}>
+        <h3 style={styles.contentTitle}>
+          Literature in this library ({library.literature_count || 0})
+        </h3>
+        
+        {library.literature && library.literature.length > 0 ? (
+          <div style={styles.literatureList}>
+            {library.literature.map((item) => (
+              <div key={item.id} style={styles.literatureItem}>
+                <div style={styles.itemContent}>
+                  <h4 style={styles.itemTitle}>{item.title}</h4>
+                  <p style={styles.itemAuthors}>by {item.authors}</p>
+                  <p style={styles.itemDescription}>
+                    {item.description && item.description.length > 150
+                      ? `${item.description.substring(0, 150)}...`
+                      : item.description || "No description"}
+                  </p>
                 </div>
-              ))}
-            </div>
-          ) : (
-            <div style={styles.emptyLibrary}>
-              <p>No literature in this library yet.</p>
-              <button 
-                onClick={() => navigate("/literature")}
-                style={styles.browseButton}
-              >
-                Browse Literature
-              </button>
-            </div>
-          )}
-        </div>
-      </form>
+                <div style={styles.itemActions}>
+                  <button 
+                    onClick={() => navigate(`/literature/${item.id}`)}
+                    style={styles.viewItemButton}
+                  >
+                    View
+                  </button>
+                  <button
+                    onClick={() => handleRemoveFromLibrary(item.id)}
+                    style={styles.removeItemButton}
+                    title="Remove from library"
+                  >
+                    Remove
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div style={styles.emptyLibrary}>
+            <p>No literature in this library yet.</p>
+            <button 
+              onClick={() => navigate("/literature")}
+              style={styles.browseButton}
+            >
+              Browse Literature
+            </button>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
@@ -272,6 +262,10 @@ const styles = {
     flexWrap: "wrap",
     gap: "1rem",
   },
+  editForm: {
+    flex: 1,
+    maxWidth: "400px",
+  },
   titleInput: {
     fontSize: "2rem",
     fontWeight: "bold",
@@ -279,7 +273,6 @@ const styles = {
     border: "1px solid #ced4da",
     borderRadius: "4px",
     width: "100%",
-    maxWidth: "400px",
   },
   actions: {
     display: "flex",
@@ -336,41 +329,8 @@ const styles = {
     fontSize: "0.9rem",
     transition: "background-color 0.2s",
   },
-  form: {
-    backgroundColor: "#f8f9fa",
-    padding: "2rem",
-    borderRadius: "8px",
-    margin: "0 1rem",
-  },
-  formGroup: {
-    marginBottom: "1.5rem",
-  },
-  label: {
-    display: "block",
-    marginBottom: "0.5rem",
-    fontWeight: "600",
-    color: "#495057",
-  },
-  textarea: {
-    width: "100%",
-    padding: "0.75rem",
-    border: "1px solid #ced4da",
-    borderRadius: "4px",
-    fontSize: "1rem",
-    resize: "vertical",
-    minHeight: "80px",
-    fontFamily: "inherit",
-    boxSizing: "border-box",
-  },
-  description: {
-    backgroundColor: "white",
-    padding: "1rem",
-    borderRadius: "4px",
-    marginBottom: "2rem",
-    borderLeft: "4px solid #007bff",
-  },
   content: {
-    marginTop: "2rem",
+    padding: "0 1rem",
   },
   contentTitle: {
     fontSize: "1.5rem",
@@ -468,10 +428,12 @@ const styles = {
   },
   errorContainer: {
     display: "flex",
+    flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
     height: "300px",
     padding: "0 1rem",
+    gap: "1rem",
   },
   error: {
     backgroundColor: "#f8d7da",
@@ -482,39 +444,30 @@ const styles = {
     width: "100%",
     maxWidth: "500px",
   },
+  backButton: {
+    backgroundColor: "#6c757d",
+    color: "white",
+    border: "none",
+    padding: "0.75rem 1.5rem",
+    borderRadius: "4px",
+    cursor: "pointer",
+    fontSize: "1rem",
+  },
 };
 
-// Add hover effects
+
 const addHoverEffects = () => {
   const style = document.createElement('style');
   style.textContent = `
-    .edit-btn:hover {
-      background-color: #0056b3;
-    }
-    .delete-btn:hover {
-      background-color: #c82333;
-    }
-    .back-btn:hover {
-      background-color: #545b62;
-    }
-    .save-btn:hover {
-      background-color: #218838;
-    }
-    .cancel-btn:hover {
-      background-color: #545b62;
-    }
-    .view-item-btn:hover {
-      background-color: #0056b3;
-    }
-    .remove-item-btn:hover {
-      background-color: #c82333;
-    }
-    .browse-btn:hover {
-      background-color: #0056b3;
-    }
-    .literature-item:hover {
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    }
+    .edit-btn:hover { background-color: #0056b3; }
+    .delete-btn:hover { background-color: #c82333; }
+    .back-btn:hover { background-color: #545b62; }
+    .save-btn:hover { background-color: #218838; }
+    .cancel-btn:hover { background-color: #545b62; }
+    .view-item-btn:hover { background-color: #0056b3; }
+    .remove-item-btn:hover { background-color: #c82333; }
+    .browse-btn:hover { background-color: #0056b3; }
+    .literature-item:hover { box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
   `;
   document.head.appendChild(style);
 };

@@ -1,7 +1,7 @@
-// src/services/literature.js
+
 import api from "./apiConfig";
 
-// Get all literature (accessible to guests)
+
 export const getAllLiterature = async () => {
   try {
     const resp = await api.get("/literatures/");
@@ -11,7 +11,7 @@ export const getAllLiterature = async () => {
   }
 };
 
-// Get single literature item (accessible to guests)
+
 export const getOneLiterature = async (id) => {
   try {
     const resp = await api.get(`/literatures/${id}/`);
@@ -21,7 +21,7 @@ export const getOneLiterature = async (id) => {
   }
 };
 
-// Create new literature (authenticated only)
+
 export const createLiterature = async (literatureData) => {
   try {
     const resp = await api.post("/literatures/", literatureData);
@@ -31,7 +31,7 @@ export const createLiterature = async (literatureData) => {
   }
 };
 
-// Update literature (owner only)
+
 export const updateLiterature = async (id, literatureData) => {
   try {
     const resp = await api.put(`/literatures/${id}/`, literatureData);
@@ -41,7 +41,7 @@ export const updateLiterature = async (id, literatureData) => {
   }
 };
 
-// Delete literature (owner only)
+
 export const deleteLiterature = async (id) => {
   try {
     const resp = await api.delete(`/literatures/${id}/`);
@@ -51,7 +51,7 @@ export const deleteLiterature = async (id) => {
   }
 };
 
-// Get all libraries for the logged-in user
+
 export const getAllLibraries = async () => {
   try {
     const resp = await api.get("/libraries/");
@@ -61,7 +61,7 @@ export const getAllLibraries = async () => {
   }
 };
 
-// Get single library
+
 export const getOneLibrary = async (id) => {
   try {
     const resp = await api.get(`/libraries/${id}/`);
@@ -71,7 +71,7 @@ export const getOneLibrary = async (id) => {
   }
 };
 
-// Create new library
+
 export const createLibrary = async (libraryData) => {
   try {
     const resp = await api.post("/libraries/", libraryData);
@@ -81,7 +81,7 @@ export const createLibrary = async (libraryData) => {
   }
 };
 
-// Update library
+
 export const updateLibrary = async (id, libraryData) => {
   try {
     const resp = await api.put(`/libraries/${id}/`, libraryData);
@@ -91,7 +91,7 @@ export const updateLibrary = async (id, libraryData) => {
   }
 };
 
-// Delete library
+
 export const deleteLibrary = async (id) => {
   try {
     const resp = await api.delete(`/libraries/${id}/`);
@@ -101,7 +101,7 @@ export const deleteLibrary = async (id) => {
   }
 };
 
-// Add literature to library
+
 export const addToLibrary = async (literatureId, libraryId) => {
   try {
     const resp = await api.post(`/literatures/${literatureId}/add-library/${libraryId}/`);
@@ -111,7 +111,7 @@ export const addToLibrary = async (literatureId, libraryId) => {
   }
 };
 
-// Remove literature from library
+
 export const removeFromLibrary = async (literatureId, libraryId) => {
   try {
     const resp = await api.post(`/literatures/${literatureId}/remove-library/${libraryId}/`);

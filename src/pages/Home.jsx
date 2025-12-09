@@ -1,4 +1,4 @@
-// src/pages/Home.jsx
+
 import { Link } from "react-router-dom";
 
 function Home({ user }) {
@@ -32,22 +32,22 @@ function Home({ user }) {
       </div>
 
       <div style={styles.featuresContainer}>
-        <h2 style={styles.featuresTitle}>Features</h2>
+        <h2 style={styles.featuresTitle}>Features:</h2>
         <div style={styles.featureGrid}>
           <div style={styles.feature}>
-            <div style={styles.featureIcon}>📚</div>
+            
             <h3>Organize Literature</h3>
             <p>Keep track of books, articles, papers, and more</p>
           </div>
           <div style={styles.feature}>
-            <div style={styles.featureIcon}>🔗</div>
+            
             <h3>Save URLs</h3>
             <p>Store links to online resources for easy access</p>
           </div>
           <div style={styles.feature}>
-            <div style={styles.featureIcon}>🏷️</div>
+            
             <h3>Categorize</h3>
-            <p>Organize by type, status, and custom libraries</p>
+            <p>Organize by type and custom libraries</p>
           </div>
         </div>
       </div>
@@ -129,6 +129,8 @@ const styles = {
     fontSize: "2rem",
     marginBottom: "3rem",
     color: "#212529",
+    
+
   },
   featureGrid: {
     display: "grid",
@@ -143,7 +145,7 @@ const styles = {
     textAlign: "center",
     boxShadow: "0 2px 10px rgba(0,0,0,0.1)",
     transition: "transform 0.2s",
-    cursor: "pointer",
+    
   },
   featureIcon: {
     fontSize: "3rem",
@@ -151,7 +153,7 @@ const styles = {
   },
 };
 
-// Add hover effects
+
 const addHoverStyles = () => {
   const style = document.createElement('style');
   style.textContent = `
@@ -162,7 +164,7 @@ const addHoverStyles = () => {
   document.head.appendChild(style);
 };
 
-// Call this after component mounts
+
 addHoverStyles();
 
 export default Home;

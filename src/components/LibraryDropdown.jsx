@@ -1,4 +1,4 @@
-// src/components/LibraryDropdown.jsx
+
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { getAllLibraries, createLibrary } from "../services/literatures";
@@ -26,24 +26,29 @@ function LibraryDropdown({ user }) {
     }
   };
 
-  const handleCreateLibrary = async (e) => {
-    e.preventDefault();
-    if (!newLibraryName.trim()) return;
-    
-    try {
-      setLoading(true);
-      await createLibrary({ name: newLibraryName });
-      setNewLibraryName("");
-      setShowCreateForm(false);
-      fetchLibraries();
-      navigate(`/libraries`);
-    } catch (error) {
-      console.error("Failed to create library:", error);
-      alert("Failed to create library");
-    } finally {
-      setLoading(false);
+  // src/components/LibraryDropdown.jsx - Update handleCreateLibrary
+const handleCreateLibrary = async (e) => {
+  e.preventDefault();
+  if (!newLibraryName.trim()) return;
+  
+  try {
+    setLoading(true);
+    // Send only name
+    await createLibrary({ name: newLibraryName });
+    setNewLibraryName("");
+    setShowCreateForm(false);
+    fetchLibraries();
+  } catch (error) {
+    console.error("Failed to create library:", error);
+    if (error.response?.data) {
+      alert(`Failed to create library: ${JSON.stringify(error.response.data)}`);
+    } else {
+      alert("Failed to create library. Please try again.");
     }
-  };
+  } finally {
+    setLoading(false);
+  }
+};
 
   if (!user) return null;
 
@@ -235,7 +240,7 @@ const styles = {
   },
 };
 
-// Add hover styles
+
 const addDropdownStyles = () => {
   const style = document.createElement('style');
   style.textContent = `

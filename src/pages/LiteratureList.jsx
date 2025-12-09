@@ -28,7 +28,7 @@ function LiteratureList({ user }) {
     if (window.confirm("Are you sure you want to delete this item?")) {
       try {
         await deleteLiterature(id);
-        fetchLiterature(); // Refresh the list
+        fetchLiterature(); 
       } catch (error) {
         console.error("Failed to delete:", error);
         alert("Failed to delete item");
@@ -99,7 +99,7 @@ function LiteratureList({ user }) {
       View
     </Link>
     
-    {/* Only show edit/delete if user owns the literature */}
+    
     {user && item.user === user.id && (
       <>
         
@@ -268,7 +268,7 @@ const styles = {
   },
 };
 
-// Add hover effect for cards
+
 const addCardHover = () => {
   const style = document.createElement('style');
   style.textContent = `
