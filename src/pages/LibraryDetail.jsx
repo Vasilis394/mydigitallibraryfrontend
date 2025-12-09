@@ -1,7 +1,12 @@
 // src/pages/LibraryDetail.jsx
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { getOneLibrary, updateLibrary, deleteLibrary } from "../services/literatures";
+import { 
+  getOneLibrary, 
+  updateLibrary, 
+  deleteLibrary,
+  removeFromLibrary 
+} from "../services/literatures";
 
 function LibraryDetail({ user }) {
   const { id } = useParams();
@@ -56,6 +61,19 @@ function LibraryDetail({ user }) {
         navigate("/libraries");
       } catch (error) {
         setError("Failed to delete library");
+      }
+    }
+  };
+
+  const handleRemoveFromLibrary = async (literatureId) => {
+    if (window.confirm("Remove this literature from the library?")) {
+      try {
+        await removeFromLibrary(literatureId, id);
+        alert("Removed successfully!");
+        fetchLibrary(); // Refresh the library
+      } catch (error) {
+        console.error("Failed to remove:", error);
+        alert("Failed to remove from library");
       }
     }
   };
@@ -175,7 +193,7 @@ function LibraryDetail({ user }) {
                     <p style={styles.itemDescription}>
                       {item.description && item.description.length > 150
                         ? `${item.description.substring(0, 150)}...`
-                        : item.description}
+                        : item.description || "No description"}
                     </p>
                   </div>
                   <div style={styles.itemActions}>
@@ -184,6 +202,13 @@ function LibraryDetail({ user }) {
                       style={styles.viewItemButton}
                     >
                       View
+                    </button>
+                    <button
+                      onClick={() => handleRemoveFromLibrary(item.id)}
+                      style={styles.removeItemButton}
+                      title="Remove from library"
+                    >
+                      Remove
                     </button>
                   </div>
                 </div>
@@ -269,6 +294,7 @@ const styles = {
     borderRadius: "4px",
     cursor: "pointer",
     fontSize: "0.9rem",
+    transition: "background-color 0.2s",
   },
   deleteBtn: {
     backgroundColor: "#dc3545",
@@ -278,6 +304,7 @@ const styles = {
     borderRadius: "4px",
     cursor: "pointer",
     fontSize: "0.9rem",
+    transition: "background-color 0.2s",
   },
   backBtn: {
     backgroundColor: "#6c757d",
@@ -287,6 +314,7 @@ const styles = {
     borderRadius: "4px",
     cursor: "pointer",
     fontSize: "0.9rem",
+    transition: "background-color 0.2s",
   },
   saveBtn: {
     backgroundColor: "#28a745",
@@ -296,6 +324,7 @@ const styles = {
     borderRadius: "4px",
     cursor: "pointer",
     fontSize: "0.9rem",
+    transition: "background-color 0.2s",
   },
   cancelBtn: {
     backgroundColor: "#6c757d",
@@ -305,6 +334,7 @@ const styles = {
     borderRadius: "4px",
     cursor: "pointer",
     fontSize: "0.9rem",
+    transition: "background-color 0.2s",
   },
   form: {
     backgroundColor: "#f8f9fa",
@@ -360,6 +390,7 @@ const styles = {
     display: "flex",
     justifyContent: "space-between",
     alignItems: "flex-start",
+    transition: "box-shadow 0.2s",
   },
   itemContent: {
     flex: "1",
@@ -382,6 +413,10 @@ const styles = {
   },
   itemActions: {
     marginLeft: "1rem",
+    display: "flex",
+    flexDirection: "column",
+    gap: "0.5rem",
+    minWidth: "120px",
   },
   viewItemButton: {
     backgroundColor: "#007bff",
@@ -391,6 +426,17 @@ const styles = {
     borderRadius: "4px",
     cursor: "pointer",
     fontSize: "0.875rem",
+    transition: "background-color 0.2s",
+  },
+  removeItemButton: {
+    backgroundColor: "#dc3545",
+    color: "white",
+    border: "none",
+    padding: "0.5rem 1rem",
+    borderRadius: "4px",
+    cursor: "pointer",
+    fontSize: "0.875rem",
+    transition: "background-color 0.2s",
   },
   emptyLibrary: {
     textAlign: "center",
@@ -408,6 +454,7 @@ const styles = {
     cursor: "pointer",
     fontSize: "1rem",
     marginTop: "1rem",
+    transition: "background-color 0.2s",
   },
   loadingContainer: {
     display: "flex",
@@ -436,5 +483,42 @@ const styles = {
     maxWidth: "500px",
   },
 };
+
+// Add hover effects
+const addHoverEffects = () => {
+  const style = document.createElement('style');
+  style.textContent = `
+    .edit-btn:hover {
+      background-color: #0056b3;
+    }
+    .delete-btn:hover {
+      background-color: #c82333;
+    }
+    .back-btn:hover {
+      background-color: #545b62;
+    }
+    .save-btn:hover {
+      background-color: #218838;
+    }
+    .cancel-btn:hover {
+      background-color: #545b62;
+    }
+    .view-item-btn:hover {
+      background-color: #0056b3;
+    }
+    .remove-item-btn:hover {
+      background-color: #c82333;
+    }
+    .browse-btn:hover {
+      background-color: #0056b3;
+    }
+    .literature-item:hover {
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+  `;
+  document.head.appendChild(style);
+};
+
+addHoverEffects();
 
 export default LibraryDetail;
