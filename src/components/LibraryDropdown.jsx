@@ -26,25 +26,21 @@ function LibraryDropdown({ user }) {
     }
   };
 
-  // src/components/LibraryDropdown.jsx - Update handleCreateLibrary
+  
 const handleCreateLibrary = async (e) => {
   e.preventDefault();
   if (!newLibraryName.trim()) return;
   
   try {
     setLoading(true);
-    // Send only name
+    
     await createLibrary({ name: newLibraryName });
     setNewLibraryName("");
     setShowCreateForm(false);
     fetchLibraries();
   } catch (error) {
     console.error("Failed to create library:", error);
-    if (error.response?.data) {
-      alert(`Failed to create library: ${JSON.stringify(error.response.data)}`);
-    } else {
-      alert("Failed to create library. Please try again.");
-    }
+    
   } finally {
     setLoading(false);
   }

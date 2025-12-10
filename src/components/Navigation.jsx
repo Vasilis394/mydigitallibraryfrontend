@@ -33,9 +33,7 @@ function Navigation({ user, setUser }) {
             <>
               <LibraryDropdown user={user} />
               
-              <Link to="/create-literature" style={styles.addLink}>
-                Add Literature
-              </Link>
+              
               
               <span style={styles.user}>Hello, {user.username}</span>
               <button onClick={handleLogout} style={styles.logoutBtn}>

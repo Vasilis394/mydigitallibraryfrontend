@@ -62,7 +62,7 @@ function LiteratureList({ user }) {
   return (
     <div style={styles.container}>
       <div style={styles.header}>
-        <h1>My Literature</h1>
+        <h1>All Literature</h1>
         <Link to="/create-literature" style={styles.addButton}>
           + Add New Literature
         </Link>

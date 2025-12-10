@@ -15,7 +15,7 @@ function Home({ user }) {
             <div style={styles.authenticated}>
               <p style={styles.welcome}>Welcome back, {user.username}!</p>
               <Link to="/literature" style={styles.ctaButton}>
-                Go to My Library
+                Proceed to literature
               </Link>
             </div>
           ) : (

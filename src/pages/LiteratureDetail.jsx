@@ -398,7 +398,7 @@ function LiteratureDetail({ user }) {
           {user && (
             <div style={styles.ownershipInfo}>
               <small>
-                {canEdit ? "You own this literature" : "You don't own this literature"}
+                {canEdit ? "You created this literature" : "You didn't create this literature"}
               </small>
             </div>
           )}

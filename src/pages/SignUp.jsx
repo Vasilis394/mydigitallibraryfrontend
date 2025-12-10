@@ -109,9 +109,7 @@ function SignUp({ setUser }) {
             Sign Up
           </button>
         </form>
-        <p style={styles.loginLink}>
-          Already have an account? <Link to="/login">Login here</Link>
-        </p>
+        
       </div>
     </div>
   );
