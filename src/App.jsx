@@ -18,20 +18,22 @@ function App() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const checkUser = async () => {
-      try {
-        const userData = await verifyUser();
-        if (userData) {
-          setUser(userData);
-        }
-      } catch (error) {
-        console.error("Verification failed:", error);
-      } finally {
-        setLoading(false);
+  const checkUser = async () => {
+    try {
+      console.log("App: Checking user authentication...");
+      const userData = await verifyUser();
+      console.log("App: User data:", userData);
+      if (userData) {
+        setUser(userData);
       }
-    };
-    checkUser();
-  }, []);
+    } catch (error) {
+      console.error("App: Verification failed:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  checkUser();
+}, []);
 
   if (loading) {
     return (
