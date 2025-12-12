@@ -85,7 +85,7 @@ function LibrariesList({ user }) {
             <p>No libraries yet. Create your first library!</p>
             <p style={styles.emptySubtitle}>You can create libraries from the dropdown menu in the navigation bar.</p>
             <Link to="/literature" style={styles.createLink}>
-              Browse Literature to Add to Libraries
+              Back to literature list
             </Link>
           </div>
         ) : (
